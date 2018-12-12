@@ -46,17 +46,17 @@ const Fieldtype = {
   `,
   mixins: [window.Storyblok.plugin],
   computed: {
-    cols: function cols() {
+    cols() {
       if (this.model) {
-        return this.model.thead.length;
+        return this.model.thead.length
       }
-      return 0;
+      return 0
     }
   },
-  data: function data() {
+  data() {
     return {
       open: false
-    };
+    }
   },
   methods: {
     initWith() {
@@ -83,89 +83,87 @@ const Fieldtype = {
         ]
       }
     },
-    resetFn: function resetFn(e) {
-      var textarea = e.currentTarget;
-      textarea.style.overflowY = 'scroll';
-      textarea.style.height = '42px';
+    resetFn(e) {
+      var textarea = e.currentTarget
+      textarea.style.overflowY = 'scroll'
+      textarea.style.height = '42px'
     },
-    autogrowFn: function autogrowFn(e) {
-      var maxAllowedHeight = 300;
-      var newHeight = 0;
-      var hasGrown = false;
-      var textarea = e.currentTarget;
+    autogrowFn(e) {
+      var maxAllowedHeight = 300
+      var newHeight = 0
+      var hasGrown = false
+      var textarea = e.currentTarget
 
       if (textarea.scrollHeight > maxAllowedHeight) {
-        textarea.style.overflowY = 'scroll';
-        newHeight = maxAllowedHeight;
+        textarea.style.overflowY = 'scroll'
+        newHeight = maxAllowedHeight
       } else {
-        textarea.style.overflowY = 'hidden';
-        textarea.style.height = 'auto';
-        newHeight = textarea.scrollHeight + 2;
-        hasGrown = true;
+        textarea.style.overflowY = 'hidden'
+        textarea.style.height = 'auto'
+        newHeight = textarea.scrollHeight + 2
+        hasGrown = true
       }
 
-      textarea.style.height = newHeight + 'px';
-      return hasGrown;
+      textarea.style.height = newHeight + 'px'
+      return hasGrown
     },
-    moveRow: function moveRow(index, offset) {
-      this.move(this.model.tbody, index, offset);
+    moveRow(index, offset) {
+      this.move(this.model.tbody, index, offset)
     },
-    move: function move(elements, index, offset) {
-      var newIndex = index + offset;
+    move(elements, index, offset) {
+      var newIndex = index + offset
 
       if (newIndex > -1 && newIndex < elements.length) {
-        var removedElement = elements.splice(index, 1)[0];
-        elements.splice(newIndex, 0, removedElement);
+        var removedElement = elements.splice(index, 1)[0]
+        elements.splice(newIndex, 0, removedElement)
       }
     },
-    moveCol: function moveCol(index, offset) {
-      var _this = this;
-
-      this.move(this.model.thead, index, offset);
-      this.model.tbody.forEach(function (item) {
-        _this.move(item.body, index, offset);
-      });
+    moveCol(index, offset) {
+      this.move(this.model.thead, index, offset)
+      this.model.tbody.forEach((item) => {
+        this.move(item.body, index, offset)
+      })
     },
-    close: function close() {
+    close() {
       this.$emit('toggle-modal', false)
-      this.open = false;
+      this.open = false
     },
-    openOverlay: function openOverlay() {
+    openOverlay() {
       this.$emit('toggle-modal', true)
-      this.open = true;
+      this.open = true
     },
-    addRow: function addRow(index) {
-      var row = {component: '_table_row', body: []};
+    addRow(index) {
+      var row = {component: '_table_row', body: []}
       for (var i = 0; i < this.cols; i++) {
-        row.body[i] = {component: '_table_col', value: ''};
+        row.body[i] = {component: '_table_col', value: ''}
       }
 
       if (index !== 'last') {
-        this.model.tbody.splice(index + 1, 0, row);
+        this.model.tbody.splice(index + 1, 0, row)
       } else {
-        this.model.tbody.push(row);
+        this.model.tbody.push(row)
       }
     },
-    addCol: function addCol() {
-      this.model.thead.push({value: 'Title'});
+    addCol() {
+      this.model.thead.push({value: 'Title'})
       this.model.tbody.forEach(function (item) {
-        item.body.push({component: '_table_col', value: ''});
-      });
+        item.body.push({component: '_table_col', value: ''})
+      })
     },
-    removeCol: function removeCol(index) {
-      this.model.thead.splice(index, 1);
+    removeCol(index) {
+      this.model.thead.splice(index, 1)
       this.model.tbody.forEach(function (item) {
-        item.body.splice(index, 1);
-      });
+        item.body.splice(index, 1)
+      })
     },
-    removeRow: function removeRow(index) {
-      this.model.tbody.splice(index, 1);
+    removeRow(index) {
+      this.model.tbody.splice(index, 1)
     }
   },
   watch: {
     'model': {
-      handler: function (value) {
-        this.$emit('changed-model', value);
+      handler(value) {
+        this.$emit('changed-model', value)
       },
       deep: true
     }
